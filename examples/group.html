@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Exemplo [Group]</title>
+
+    <!--
+        bootstrap
+    -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!--
+        inner style
+    -->
+
+    <style>
+
+        /* default */
+
+        * {
+            box-sizing: border-box;
+            font-family: Georgia, serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        /* elements */
+
+        .screen {
+            padding: 32px;
+            width: 100%;
+            height: 100%;
+            background-color: #eee;
+            overflow: scroll;
+        }
+
+        .box {
+            margin: auto auto 16px;
+            width: 1024px;
+            border: 1px grey solid;
+            padding: 0 32px 0 32px;
+            background-color: #ccc;
+        }
+
+        .box:first-child {
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+        }
+
+        .box:last-child {
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+        }
+
+        form {
+            width: 100%;
+            height: 100%;
+            padding: 16px 16px 32px 16px;
+        }
+
+    </style>
+
+    <script>
+
+        function changeUrlWithVars(inputToChange){
+
+            if (!(inputToChange instanceof Array))
+                inputToChange = [inputToChange];
+
+            const form = event.currentTarget;
+            let action = form.action;
+
+            for (const input in inputToChange) {
+
+                const action_src = document.querySelector('#' + inputToChange[input]);
+                action_src.parentNode.removeChild(action_src);
+
+                action = action.replace('%7B' + inputToChange[input] + '%7D', action_src.value);
+            }
+
+            form.action = action;
+        }
+
+        function changeToAJAX(inputToChange){
+            return false;
+        }
+
+    </script>
+
+</head>
+
+<body>
+<div class="screen">
+
+    <div class="box">
+        <h3>Consultar grupos de um publisher (Form ou AJAX)</h3>
+        <form method="get" action="https://b6.net/api/group/all/{list_publisher_id}" onsubmit="changeUrlWithVars('list_publisher_id')">
+            <label for="list_publisher_id">Publisher Id</label>
+            <input type="number" name="list_publisher_id" id="list_publisher_id"><br>
+            <input type="submit" value="Buscar todos grupos de um publisher">
+        </form>
+    </div>
+
+    <div class="box">
+        <h3>Consultar group por id (Form ou AJAX)</h3>
+        <form method="get" action="https://b6.net/api/group/{get_id}" onsubmit="changeUrlWithVars('get_id')">
+            <label for="get_id">Group Id</label>
+            <input type="number" name="get_id" id="get_id"><br>
+            <input type="submit" value="Consultar um group">
+        </form>
+    </div>
+
+    <div class="box">
+        <h3>Incluir group (Form ou AJAX)</h3>
+        <form method="post" action="https://b6.net/api/group/{store_publisher_id}" onsubmit="changeUrlWithVars('store_publisher_id')">
+
+            <label for="store_publisher_id">Publisher Id</label>
+            <input type="number" name="store_publisher_id" id="store_publisher_id"><br>
+
+            <label for="store_name">Name</label>
+            <input type="text" name="name" id="store_name"><br>
+
+            <label for="store_description">Description</label>
+            <input type="text" name="description" id="store_description"><br>
+
+            <label for="store_storage_location">Storage Location</label>
+            <input type="text" name="storage_location" id="store_storage_location"><br>
+
+            <label for="store_url_path">URL Patch</label>
+            <input type="text" name="url_path" id="store_url_path"><br>
+
+            <label for="store_publicity">Publicity</label>
+            <select name="publicity" id="store_publicity">
+                <option>public</option>
+                <option>logged</option>
+                <option>userRoles</option>
+                <option>intranet</option>
+                <option>private</option>
+                <option>protected</option>
+            </select><br>
+
+            <label for="store_password">Password</label>
+            <input type="text" name="password" id="store_password"><br>
+
+            <label for="store_zip">Zip</label>
+            <select name="zip" id="store_zip">
+                <option>0</option>
+                <option>1</option>
+            </select><br>
+
+            <label for="store_zipPassword">Password</label>
+            <input type="text" name="zipPassword" id="store_zipPassword"><br>
+
+            <input type="submit" value="Criar group">
+        </form>
+    </div>
+
+    <div class="box">
+        <h3>Alterar group (AJAX)</h3>
+        <form method="patch" action="https://b6.net/api/group/{update_id}" onsubmit="return changeToAJAX('update_id')">
+
+            <label for="update_id">Group Id</label>
+            <input type="number" name="update_id" id="update_id"><br>
+
+            <label for="update_name">Name</label>
+            <input type="text" name="name" id="update_name"><br>
+
+            <label for="update_description">Description</label>
+            <input type="text" name="description" id="update_description"><br>
+
+            <label for="update_storage_location">Storage Location</label>
+            <input type="text" name="storage_location" id="update_storage_location"><br>
+
+            <label for="update_url_path">URL Patch</label>
+            <input type="text" name="url_path" id="update_url_path"><br>
+
+            <label for="update_publicity">Publicity</label>
+            <select name="publicity" id="update_publicity">
+                <option>public</option>
+                <option>logged</option>
+                <option>userRoles</option>
+                <option>intranet</option>
+                <option>private</option>
+                <option>protected</option>
+            </select><br>
+
+            <label for="update_password">Password</label>
+            <input type="text" name="password" id="update_password"><br>
+
+            <label for="update_zip">Zip</label>
+            <select name="zip" id="update_zip">
+                <option>0</option>
+                <option>1</option>
+            </select><br>
+
+            <label for="update_zipPassword">Password</label>
+            <input type="text" name="zipPassword" id="update_zipPassword"><br>
+
+            <input type="submit" value="Alterar group">
+        </form>
+    </div>
+
+    <div class="box">
+        <h3>Remover group (AJAX)</h3>
+        <form method="delete" action="https://b6.net/api/group/{delete_id}" onsubmit="return changeToAJAX('delete_id')">
+
+            <label for="delete_id">Group Id</label>
+            <input type="number" name="delete_id" id="delete_id"><br>
+
+            <input type="submit" value="Remover group">
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Exemplo [Publisher]</title>
+
+<!--
+    bootstrap
+-->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<!--
+    inner style
+-->
+
+    <style>
+
+        /* default */
+
+        * {
+            box-sizing: border-box;
+            font-family: Georgia, serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        /* elements */
+
+        .screen {
+            padding: 32px;
+            width: 100%;
+            height: 100%;
+            background-color: #eee;
+            overflow: scroll;
+        }
+
+        .box {
+            margin: auto auto 16px;
+            width: 1024px;
+            border: 1px grey solid;
+            padding: 0 32px 0 32px;
+            background-color: #ccc;
+        }
+
+        .box:first-child {
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+        }
+
+        .box:last-child {
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+        }
+
+        form {
+            width: 100%;
+            height: 100%;
+            padding: 16px 16px 32px 16px;
+        }
+
+    </style>
+
+    <script>
+
+        function changeUrlWithVars(inputToChange){
+
+            if (!(inputToChange instanceof Array))
+                inputToChange = [inputToChange];
+
+            const form = event.currentTarget;
+            let action = form.action;
+
+            for (const input in inputToChange) {
+
+                const action_src = document.querySelector('#' + inputToChange[input]);
+                action_src.parentNode.removeChild(action_src);
+
+                action = action.replace('%7B' + inputToChange[input] + '%7D', action_src.value);
+            }
+
+            form.action = action;
+        }
+
+        function changeToAJAX(inputToChange){
+            return false;
+        }
+
+    </script>
+
+</head>
+
+<body>
+    <div class="screen">
+
+        <div class="box">
+            <h3>consultar publishers (Form ou AJAX)</h3>
+            <form method="get" action="https://b6.net/api/publisher/all">
+                <input type="submit" value="Buscar todos publishers">
+            </form>
+        </div>
+
+        <div class="box">
+            <h3>consultar publisher por id (Form ou AJAX)</h3>
+            <form method="get" action="https://b6.net/api/publisher/{get_id}" onsubmit="changeUrlWithVars('get_id')">
+                <label for="get_id">Publisher Id</label>
+                <input type="number" name="id" id="get_id"><br>
+                <input type="submit" value="Consultar um publisher">
+            </form>
+        </div>
+
+        <div class="box">
+            <h3>Incluir publisher (Form ou AJAX)</h3>
+            <form method="post" action="https://b6.net/api/publisher">
+
+                <label for="store_name">Name</label>
+                <input type="text" name="name" id="store_name"><br>
+
+                <label for="store_email">E-mail</label>
+                <input type="text" name="email" id="store_email"><br>
+
+                <input type="submit" value="Criar publisher">
+            </form>
+        </div>
+
+        <div class="box">
+            <h3>Alterar publisher (AJAX)</h3>
+            <form method="patch" action="https://b6.net/api/publisher/{update_id}" onsubmit="return changeToAJAX('update_id')">
+
+                <label for="update_id">Publisher Id</label>
+                <input type="number" name="id" id="update_id"><br>
+
+                <label for="update_name">Name</label>
+                <input type="text" name="name" id="update_name"><br>
+
+                <label for="update_email">E-mail</label>
+                <input type="text" name="email" id="update_email"><br>
+
+                <input type="submit" value="Alterar publisher">
+            </form>
+        </div>
+
+        <div class="box">
+            <h3>Remover publisher (AJAX)</h3>
+            <form method="delete" action="https://b6.net/api/publisher/{delete_id}" onsubmit="return changeToAJAX('delete_id')">
+
+                <label for="delete_id">Publisher Id</label>
+                <input type="number" name="id" id="delete_id"><br>
+
+                <input type="submit" value="Remover publisher">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
